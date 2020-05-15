@@ -26,13 +26,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class GlobalFragment : Fragment() {
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_global, container, false)
     }
-
     override fun onViewCreated(view: View,  @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         callGlobalSummaryService()
