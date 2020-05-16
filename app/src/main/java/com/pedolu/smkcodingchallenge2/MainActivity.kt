@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
                     menuIcon[position], null
                 )
             }).attach()
+        viewPager.isUserInputEnabled = false
         tabsLayout.getTabAt(0)!!.icon!!.setColorFilter(
             resources.getColor(R.color.colorAccent),
             PorterDuff.Mode.SRC_IN

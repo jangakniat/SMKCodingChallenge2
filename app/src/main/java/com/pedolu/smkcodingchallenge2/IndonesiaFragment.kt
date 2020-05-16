@@ -1,5 +1,6 @@
 package com.pedolu.smkcodingchallenge2
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import com.pedolu.smkcodingchallenge2.data.dao.CovidKawalCoronaService
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.kawalCoronaApiRequest
 import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.util.dismissLoading
+import com.pedolu.smkcodingchallenge2.util.showLoading
 import com.pedolu.smkcodingchallenge2.util.tampilToast
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_indonesia.*
@@ -18,8 +21,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class IndonesiaFragment : Fragment() {
 
+class IndonesiaFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +34,10 @@ class IndonesiaFragment : Fragment() {
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         callIndonesiaProvinsi()
+        swipeRefreshLayout.post { callIndonesiaProvinsi() }
+        swipeRefreshLayout.setOnRefreshListener {
+            callIndonesiaProvinsi()
+        }
     }
 
     private fun setVisible() {
@@ -47,12 +54,14 @@ class IndonesiaFragment : Fragment() {
 
     private fun callIndonesiaProvinsi() {
         setInvisible()
+        showLoading(context!!, swipeRefreshLayout)
         val httpClient = httpClient()
         val apiRequest = kawalCoronaApiRequest<CovidKawalCoronaService>(httpClient)
         val call = apiRequest.getProvinsi()
         call.enqueue(object : Callback<List<ProvinsiItem>> {
             override fun onFailure(call: Call<List<ProvinsiItem>>, t: Throwable) {
                 tampilToast(context!!, "Gagal")
+                dismissLoading(swipeRefreshLayout)
                 setVisible()
                 txtIndonesia.text = "Coba Lagi"
             }
@@ -62,6 +71,7 @@ class IndonesiaFragment : Fragment() {
                 Response<List<ProvinsiItem>>
             ) {
                 setVisible()
+                dismissLoading(swipeRefreshLayout)
                 when {
                     response.isSuccessful -> {
                         when {
@@ -84,7 +94,7 @@ class IndonesiaFragment : Fragment() {
         listProvinsiIndonesia.layoutManager = LinearLayoutManager(context)
         listProvinsiIndonesia.adapter = IndonesiaAdapter(context!!, provinsi) {
             val provinsi = it
-            tampilToast(context!!, "asd")
+            tampilToast(context!!, provinsi.attributes.provinsi)
         }
     }
 
