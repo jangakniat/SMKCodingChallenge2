@@ -1,7 +1,6 @@
 package com.pedolu.smkcodingchallenge2
 
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,13 +11,18 @@ class MainActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.home -> {
+            R.id.global -> {
                 val fragment = GlobalFragment()
                 addFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.graph -> {
+            R.id.local -> {
                 val fragment = LocalFragment()
+                addFragment(fragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.indonesia -> {
+                val fragment = IndonesiaFragment()
                 addFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }

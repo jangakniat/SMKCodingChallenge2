@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
+        android:id="@+id/global"
         android:enabled="true"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="Home"
-        android:iconTint="@color/colorBackground"/>
+        android:iconTint="@color/colorPrimaryDark"
+        android:title="Global" />
     <item
-        android:id="@+id/graph"
+        android:id="@+id/local"
         android:enabled="true"
         android:icon="@drawable/ic_insert_chart_black_24dp"
-        android:title="Graph"
-        android:iconTint="@color/colorBackground"/>
+        android:iconTint="@color/colorPrimaryDark"
+        android:title="Local" />
+    <item
+        android:id="@+id/indonesia"
+        android:enabled="true"
+        android:icon="@drawable/ic_insert_chart_black_24dp"
+        android:iconTint="@color/colorPrimaryDark"
+        android:title="Indonesia" />
 </menu>

@@ -10,10 +10,10 @@ import retrofit2.http.Path
 interface GlobalSummaryService {
 
         @GET("api/countries/{country}")
-        fun getConfirmed(@Path("country") country: String?): Call<List<CountrySummary>>
+        fun getCountry(@Path("country") country: String?): Call<CountrySummary>
 
         @GET("api/countries")
-        fun getDeaths(): Call<List<Countries>>
+        fun getCountries(): Call<Countries>
 
         @GET("api/")
         fun getGlobal(): Call<GlobalSummary>

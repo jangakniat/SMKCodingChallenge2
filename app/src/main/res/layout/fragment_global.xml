@@ -4,9 +4,20 @@
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:foregroundGravity="center"
+            android:indeterminate="true" />
         <androidx.cardview.widget.CardView
             android:id="@+id/graphCard"
             android:layout_width="match_parent"

@@ -12,12 +12,10 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.pedolu.smkcodingchallenge2.data.apiRequest
 import com.pedolu.smkcodingchallenge2.data.dao.GlobalSummaryService
 import com.pedolu.smkcodingchallenge2.data.httpClient
+import com.pedolu.smkcodingchallenge2.data.mathdroidApiRequest
 import com.pedolu.smkcodingchallenge2.data.model.GlobalSummary
-import com.pedolu.smkcodingchallenge2.util.dismissLoading
-import com.pedolu.smkcodingchallenge2.util.showLoading
 import com.pedolu.smkcodingchallenge2.util.tampilToast
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_global.*
@@ -36,21 +34,30 @@ class GlobalFragment : Fragment() {
         callGlobalSummaryService()
     }
     private fun callGlobalSummaryService(){
-        if(isAdded) {
-            showLoading(context!!, swipeRefreshLayout)
+        graphCard.visibility = View.GONE
+        confirmedCard.visibility = View.GONE
+        recoveredCard.visibility = View.GONE
+        deathCard.visibility = View.GONE
             val httpClient = httpClient()
-            val apiRequest = apiRequest<GlobalSummaryService>(httpClient)
-            val call = apiRequest.getGlobal()
+        val mathdroidApiRequest = mathdroidApiRequest<GlobalSummaryService>(httpClient)
+        val call = mathdroidApiRequest.getGlobal()
             call.enqueue(object : Callback<GlobalSummary> {
                 override fun onFailure(call: Call<GlobalSummary>, t: Throwable) {
-                    dismissLoading(swipeRefreshLayout)
+                    graphCard.visibility = View.VISIBLE
+                    confirmedCard.visibility = View.VISIBLE
+                    recoveredCard.visibility = View.VISIBLE
+                    deathCard.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
                 }
-
                 override fun onResponse(
                     call: Call<GlobalSummary>, response:
                     Response<GlobalSummary>
                 ) {
-                    dismissLoading(swipeRefreshLayout)
+                    graphCard.visibility = View.VISIBLE
+                    confirmedCard.visibility = View.VISIBLE
+                    recoveredCard.visibility = View.VISIBLE
+                    deathCard.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
                     when {
                         response.isSuccessful ->
                             when {
@@ -64,7 +71,6 @@ class GlobalFragment : Fragment() {
                     }
                 }
             })
-        }
     }
 
     fun showGlobalSummary(item:GlobalSummary){
@@ -98,7 +104,7 @@ class GlobalFragment : Fragment() {
             description.isEnabled = false
             transparentCircleRadius = 0f
             animateY(1400, Easing.EaseInOutQuad)
-            setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorBackground))
+            setHoleColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
             invalidate()
         }
 
