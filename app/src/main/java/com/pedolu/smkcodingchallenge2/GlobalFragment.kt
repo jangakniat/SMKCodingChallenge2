@@ -12,7 +12,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.pedolu.smkcodingchallenge2.data.dao.GlobalSummaryService
+import com.pedolu.smkcodingchallenge2.data.dao.CovidMathdroidService
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.mathdroidApiRequest
 import com.pedolu.smkcodingchallenge2.data.model.GlobalSummary
@@ -23,63 +23,75 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class GlobalFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_global, container, false)
     }
-    override fun onViewCreated(view: View,  @Nullable savedInstanceState: Bundle?) {
+
+    override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         callGlobalSummaryService()
     }
-    private fun callGlobalSummaryService(){
+
+    private fun setVisible() {
+        graphCard.visibility = View.VISIBLE
+        confirmedCard.visibility = View.VISIBLE
+        recoveredCard.visibility = View.VISIBLE
+        deathCard.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+    }
+
+    private fun setInvisible() {
         graphCard.visibility = View.GONE
         confirmedCard.visibility = View.GONE
         recoveredCard.visibility = View.GONE
         deathCard.visibility = View.GONE
-            val httpClient = httpClient()
-        val mathdroidApiRequest = mathdroidApiRequest<GlobalSummaryService>(httpClient)
-        val call = mathdroidApiRequest.getGlobal()
-            call.enqueue(object : Callback<GlobalSummary> {
-                override fun onFailure(call: Call<GlobalSummary>, t: Throwable) {
-                    graphCard.visibility = View.VISIBLE
-                    confirmedCard.visibility = View.VISIBLE
-                    recoveredCard.visibility = View.VISIBLE
-                    deathCard.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
-                }
-                override fun onResponse(
-                    call: Call<GlobalSummary>, response:
-                    Response<GlobalSummary>
-                ) {
-                    graphCard.visibility = View.VISIBLE
-                    confirmedCard.visibility = View.VISIBLE
-                    recoveredCard.visibility = View.VISIBLE
-                    deathCard.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
-                    when {
-                        response.isSuccessful ->
-                            when {
-                                response.body() != null ->
-                                    showGlobalSummary(response.body()!!)
-                                else ->
-                                    tampilToast(context!!, "Berhasil")
-                            }
-                        else ->
-                            tampilToast(context!!, "Gagal")
-                    }
-                }
-            })
+        progressBar.visibility = View.VISIBLE
     }
 
-    fun showGlobalSummary(item:GlobalSummary){
-        createGlobalSummaryChart(item)
-        txtConfirmed.text=item.confirmed.value.toString()
-        txtRecovered.text=item.recovered.value.toString()
-        txtDeath.text=item.deaths.value.toString()
+    private fun callGlobalSummaryService() {
+        setInvisible()
+        val httpClient = httpClient()
+        val mathdroidApiRequest = mathdroidApiRequest<CovidMathdroidService>(httpClient)
+        val call = mathdroidApiRequest.getGlobal()
+        call.enqueue(object : Callback<GlobalSummary> {
+            override fun onFailure(call: Call<GlobalSummary>, t: Throwable) {
+                setVisible()
+            }
+
+            override fun onResponse(
+                call: Call<GlobalSummary>, response:
+                Response<GlobalSummary>
+            ) {
+                setVisible()
+                when {
+                    response.isSuccessful ->
+                        when {
+                            response.body() != null ->
+                                showGlobalSummary(response.body()!!)
+                            else ->
+                                tampilToast(context!!, "Berhasil")
+                        }
+                    else ->
+                        tampilToast(context!!, "Gagal")
+                }
+            }
+        })
     }
-    private fun createGlobalSummaryChart(item:GlobalSummary){
+
+    fun showGlobalSummary(item: GlobalSummary) {
+        createGlobalSummaryChart(item)
+        txtConfirmed.text = item.confirmed.value.toString()
+        txtRecovered.text = item.recovered.value.toString()
+        txtDeath.text = item.deaths.value.toString()
+    }
+
+    private fun createGlobalSummaryChart(item: GlobalSummary) {
         val pieChart: PieChart = globalSummaryChart
         val listPie = ArrayList<PieEntry>()
         val listColors = ArrayList<Int>()
@@ -109,6 +121,7 @@ class GlobalFragment : Fragment() {
         }
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         this.clearFindViewByIdCache()

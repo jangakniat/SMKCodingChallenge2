@@ -16,15 +16,15 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.pedolu.smkcodingchallenge2.data.dao.GlobalSummaryService
+import com.pedolu.smkcodingchallenge2.data.dao.CovidMathdroidService
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.mathdroidApiRequest
 import com.pedolu.smkcodingchallenge2.data.model.Countries
 import com.pedolu.smkcodingchallenge2.data.model.CountrySummary
-import com.pedolu.smkcodingchallenge2.util.dismissLoading
-import com.pedolu.smkcodingchallenge2.util.showLoading
 import com.pedolu.smkcodingchallenge2.util.tampilToast
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_local.*
+import kotlinx.android.synthetic.main.fragment_local.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,35 +42,39 @@ class LocalFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        callCountries()
+        callCountries(view)
     }
 
-    fun callCountries() {
-        graphCard.visibility = View.GONE
-        confirmedCard.visibility = View.GONE
-        recoveredCard.visibility = View.GONE
-        deathCard.visibility = View.GONE
+    private fun setVisible(view: View) {
+        view.graphCard.visibility = View.VISIBLE
+        view.confirmedCard.visibility = View.VISIBLE
+        view.recoveredCard.visibility = View.VISIBLE
+        view.deathCard.visibility = View.VISIBLE
+        view.progressBar.visibility = View.GONE
+    }
+
+    private fun setInvisible(view: View) {
+        view.graphCard.visibility = View.GONE
+        view.confirmedCard.visibility = View.GONE
+        view.recoveredCard.visibility = View.GONE
+        view.deathCard.visibility = View.GONE
+        view.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun callCountries(view: View) {
+        setInvisible(view)
         val httpClient = httpClient()
-        val mathdroidApiRequest = mathdroidApiRequest<GlobalSummaryService>(httpClient)
+        val mathdroidApiRequest = mathdroidApiRequest<CovidMathdroidService>(httpClient)
         val call = mathdroidApiRequest.getCountries()
         call.enqueue(object : Callback<Countries> {
             override fun onFailure(call: Call<Countries>, t: Throwable) {
-                graphCard.visibility = View.VISIBLE
-                confirmedCard.visibility = View.VISIBLE
-                recoveredCard.visibility = View.VISIBLE
-                deathCard.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+                setVisible(view)
             }
-
             override fun onResponse(
                 call: Call<Countries>, response:
                 Response<Countries>
             ) {
-                graphCard.visibility = View.VISIBLE
-                confirmedCard.visibility = View.VISIBLE
-                recoveredCard.visibility = View.VISIBLE
-                deathCard.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+                setVisible(view)
                 when {
                     response.isSuccessful ->
                         when {
@@ -90,20 +94,20 @@ class LocalFragment : Fragment() {
     }
 
     private fun callCountrySummary(country: String) {
-        showLoading(context!!, swipeRefreshLayout)
+        progressBar?.visibility = View.VISIBLE
         val httpClient = httpClient()
-        val mathdroidApiRequest = mathdroidApiRequest<GlobalSummaryService>(httpClient)
+        val mathdroidApiRequest = mathdroidApiRequest<CovidMathdroidService>(httpClient)
         val call = mathdroidApiRequest.getCountry(country)
         call.enqueue(object : Callback<CountrySummary> {
             override fun onFailure(call: Call<CountrySummary>, t: Throwable) {
-                dismissLoading(swipeRefreshLayout)
+                progressBar?.visibility = View.GONE
             }
 
             override fun onResponse(
                 call: Call<CountrySummary>, response:
                 Response<CountrySummary>
             ) {
-                dismissLoading(swipeRefreshLayout)
+                progressBar?.visibility = View.GONE
                 when {
                     response.isSuccessful ->
                         when {
@@ -187,5 +191,10 @@ class LocalFragment : Fragment() {
                 callCountrySummary(countrySpinner.selectedItem.toString())
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.clearFindViewByIdCache()
     }
 }

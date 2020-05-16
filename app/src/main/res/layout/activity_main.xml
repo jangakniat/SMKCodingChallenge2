@@ -7,23 +7,19 @@
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark">
 
-    <FrameLayout
-        android:id="@+id/content"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-    </FrameLayout>
+        android:layout_weight="1" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabsLayout"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@drawable/bottom_navigation_color_selector"
-        app:itemTextColor="@drawable/bottom_navigation_color_selector"
-        app:itemRippleColor="@color/colorAccent"
-        app:menu="@menu/bottom_navigation_menu"
-         />
+        android:layout_width="match_parent"
+        app:tabBackground="@color/colorPrimary"
+        app:tabIconTint="@color/colorWhite"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/colorWhite" />
 
 </LinearLayout>

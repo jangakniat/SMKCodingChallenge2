@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">SMKCodingChallenge2</string>
-    <string-array name="country">
-        <item>Choose Country</item>
-
-    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="txtJumlah">0</string>
+    <string name="txtRecovered">Recovered</string>
+    <string name="txtDeath">Death</string>
+    <string name="txtConfirmed">Confirmed</string>
 </resources>

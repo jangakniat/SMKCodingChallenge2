@@ -4,30 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.pedolu.smkcodingchallenge2.data.dao.CovidKawalCoronaService
+import com.pedolu.smkcodingchallenge2.data.httpClient
+import com.pedolu.smkcodingchallenge2.data.kawalCoronaApiRequest
+import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.util.tampilToast
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_indonesia.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [IndonesiaFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class IndonesiaFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +28,68 @@ class IndonesiaFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_indonesia, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment IndonesiaFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IndonesiaFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        callIndonesiaProvinsi()
+    }
+
+    private fun setVisible() {
+        txtIndonesia.visibility = View.VISIBLE
+        listProvinsiIndonesia.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+    }
+
+    private fun setInvisible() {
+        txtIndonesia.visibility = View.GONE
+        listProvinsiIndonesia.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun callIndonesiaProvinsi() {
+        setInvisible()
+        val httpClient = httpClient()
+        val apiRequest = kawalCoronaApiRequest<CovidKawalCoronaService>(httpClient)
+        val call = apiRequest.getProvinsi()
+        call.enqueue(object : Callback<List<ProvinsiItem>> {
+            override fun onFailure(call: Call<List<ProvinsiItem>>, t: Throwable) {
+                tampilToast(context!!, "Gagal")
+                setVisible()
+                txtIndonesia.text = "Coba Lagi"
+            }
+
+            override fun onResponse(
+                call: Call<List<ProvinsiItem>>, response:
+                Response<List<ProvinsiItem>>
+            ) {
+                setVisible()
+                when {
+                    response.isSuccessful -> {
+                        when {
+                            response.body()?.size != 0 ->
+                                showIndonesiaSummary(response.body()!!)
+                            else -> {
+                                tampilToast(context!!, "Berhasil")
+                            }
+                        }
+                    }
+                    else -> {
+                        tampilToast(context!!, "Gagal")
+                    }
                 }
             }
+        })
+    }
+
+    private fun showIndonesiaSummary(provinsi: List<ProvinsiItem>) {
+        listProvinsiIndonesia.layoutManager = LinearLayoutManager(context)
+        listProvinsiIndonesia.adapter = IndonesiaAdapter(context!!, provinsi) {
+            val provinsi = it
+            tampilToast(context!!, "asd")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.clearFindViewByIdCache()
     }
 }
