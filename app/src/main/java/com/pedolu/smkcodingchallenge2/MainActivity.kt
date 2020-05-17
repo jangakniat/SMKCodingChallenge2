@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val menuTeks = arrayOf("Global", "Local", "Indonesia", "Status")
     private val menuIcon = arrayOf(
         R.drawable.ic_global, R.drawable.ic_local,
-        R.drawable.ic_home, R.drawable.ic_global
+        R.drawable.ic_home, R.drawable.ic_list
     )
     private lateinit var session: UserSession
 
