@@ -1,4 +1,4 @@
-package com.pedolu.smkcodingchallenge2
+package com.pedolu.smkcodingchallenge2.fragment
 
 
 import android.os.Bundle
@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pedolu.smkcodingchallenge2.data.dao.CovidKawalCoronaService
+import com.pedolu.smkcodingchallenge2.R
+import com.pedolu.smkcodingchallenge2.adapter.IndonesiaAdapter
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.kawalCoronaApiRequest
 import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.data.service.CovidKawalCoronaService
 import com.pedolu.smkcodingchallenge2.util.dismissLoading
 import com.pedolu.smkcodingchallenge2.util.showLoading
 import com.pedolu.smkcodingchallenge2.util.tampilToast
@@ -63,7 +65,6 @@ class IndonesiaFragment : Fragment() {
                 tampilToast(context!!, "Gagal")
                 dismissLoading(swipeRefreshLayout)
                 setVisible()
-                txtIndonesia.text = "Coba Lagi"
             }
 
             override fun onResponse(
@@ -92,10 +93,14 @@ class IndonesiaFragment : Fragment() {
 
     private fun showIndonesiaSummary(provinsi: List<ProvinsiItem>) {
         listProvinsiIndonesia.layoutManager = LinearLayoutManager(context)
-        listProvinsiIndonesia.adapter = IndonesiaAdapter(context!!, provinsi) {
-            val provinsi = it
-            tampilToast(context!!, provinsi.attributes.provinsi)
-        }
+        listProvinsiIndonesia.adapter =
+            IndonesiaAdapter(
+                context!!,
+                provinsi
+            ) {
+                val provinsi = it
+                tampilToast(context!!, provinsi.attributes.provinsi)
+            }
     }
 
     override fun onDestroy() {

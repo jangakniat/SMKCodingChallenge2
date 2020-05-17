@@ -12,11 +12,9 @@ fun showLoading(context: Context, swipeRefreshLayout: SwipeRefreshLayout) {
             R.color.colorPrimary
         )
     )
-    swipeRefreshLayout.isEnabled = true
     swipeRefreshLayout.isRefreshing = true
 }
 
 fun dismissLoading(swipeRefreshLayout: SwipeRefreshLayout) {
     swipeRefreshLayout.isRefreshing = false
-    swipeRefreshLayout.isEnabled = false
 }

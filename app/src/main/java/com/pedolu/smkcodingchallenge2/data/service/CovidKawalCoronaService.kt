@@ -1,4 +1,4 @@
-package com.pedolu.smkcodingchallenge2.data.dao
+package com.pedolu.smkcodingchallenge2.data.service
 
 import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
 

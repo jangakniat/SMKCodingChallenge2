@@ -1,10 +1,11 @@
-package com.pedolu.smkcodingchallenge2
+package com.pedolu.smkcodingchallenge2.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.pedolu.smkcodingchallenge2.R
 import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.provinsi_indonesia_item.view.*

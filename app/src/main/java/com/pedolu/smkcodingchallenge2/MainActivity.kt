@@ -7,20 +7,22 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import com.pedolu.smkcodingchallenge2.adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private val menuTeks = arrayOf("Global", "Local", "Indonesia")
+    private val menuTeks = arrayOf("Global", "Local", "Indonesia", "Satus")
     private val menuIcon = arrayOf(
         R.drawable.ic_global, R.drawable.ic_local,
-        R.drawable.ic_home
+        R.drawable.ic_home, R.drawable.ic_global
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val adapter = ViewPagerAdapter(this)
+        val adapter =
+            ViewPagerAdapter(this)
         viewPager.adapter = adapter
         TabLayoutMediator(tabsLayout, viewPager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
