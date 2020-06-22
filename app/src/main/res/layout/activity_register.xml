@@ -23,11 +23,22 @@
         android:layout_margin="32dp">
 
         <EditText
-            android:id="@+id/inpUsername"
+            android:id="@+id/inpName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorWhite"
-            android:hint="Username"
+            android:hint="Name"
+            android:inputType="text"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite" />
+
+        <EditText
+            android:id="@+id/inpEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inpName"
+            android:backgroundTint="@color/colorWhite"
+            android:hint="Email"
             android:inputType="text"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite" />
@@ -36,7 +47,7 @@
             android:id="@+id/inpPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inpUsername"
+            android:layout_below="@id/inpEmail"
             android:backgroundTint="@color/colorWhite"
             android:hint="Password"
             android:inputType="textPassword"

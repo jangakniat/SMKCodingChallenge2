@@ -13,12 +13,8 @@ class UserSession(val context: Context) {
         editor.apply()
     }
 
-    fun checkLogin(): Boolean {
-        if (!pref.getBoolean(IS_USER_LOGIN, false)) {
-            val i = Intent(context, LoginActivity::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(i)
+    fun ifLogin(): Boolean {
+        if (pref.getBoolean(IS_USER_LOGIN, false)) {
             return true
         }
         return false

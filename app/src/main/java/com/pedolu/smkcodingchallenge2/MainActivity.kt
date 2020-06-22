@@ -5,10 +5,9 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -27,13 +26,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         session = UserSession(this)
-        checkLogin()
-        val adapter =
-            ViewPagerAdapter(this)
+        val adapter = ViewPagerAdapter(this)
         viewPager.adapter = adapter
+        viewPager.isUserInputEnabled = false
         TabLayoutMediator(tabsLayout, viewPager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 tab.text = menuTeks[position]
@@ -42,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                     menuIcon[position], null
                 )
             }).attach()
-        viewPager.isUserInputEnabled = false
         tabsLayout.getTabAt(0)!!.icon!!.setColorFilter(
             resources.getColor(R.color.colorAccent),
             PorterDuff.Mode.SRC_IN
@@ -66,27 +62,33 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun checkLogin() {
-        if (session.checkLogin()) {
-            goToLoginActivity()
-        }
-    }
-
-    private fun goToLoginActivity() {
-        val i = Intent(this, LoginActivity::class.java)
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(i)
-        finish()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_menu, menu)
+        menuInflater.inflate(R.menu.main_top_menu, menu)
         return true
     }
 
-    fun onLogoutAction(mi: MenuItem?) {
-        session.logoutUser()
+    fun onProfileAction(mi: MenuItem?) {
+        val i = Intent(this, ProfileActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(i)
     }
+
+    fun onLogoutAction(mi: MenuItem?) {
+        if (session.ifLogin()) {
+            session.logoutUser()
+        } else {
+            AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener {
+                    val i = Intent(this, LoginActivity::class.java)
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(i)
+                    finish()
+                }
+        }
+    }
+
 
 }
