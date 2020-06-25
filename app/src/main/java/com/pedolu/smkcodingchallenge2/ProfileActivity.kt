@@ -2,13 +2,17 @@ package com.pedolu.smkcodingchallenge2
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.iid.FirebaseInstanceId
 import com.pedolu.smkcodingchallenge2.util.tampilToast
 import com.pedolu.smkcodingchallenge2.viewmodel.UserViewModel
 import kotlinx.android.synthetic.*
@@ -44,6 +48,23 @@ class ProfileActivity : AppCompatActivity() {
         retrieveUserData()
         btnToEdit.setOnClickListener { goToEditProfileActivity() }
         btnExit.setOnClickListener { logoutUser() }
+        btnNotif.setOnClickListener { createFCMToken() }
+    }
+
+    private fun createFCMToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCM", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                Log.d("FCM", token)
+                Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+            })
     }
 
     private fun retriveRoomUserData() {

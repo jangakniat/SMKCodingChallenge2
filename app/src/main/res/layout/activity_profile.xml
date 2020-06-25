@@ -164,6 +164,14 @@
                 android:layout_margin="16dp"
                 android:background="@color/colorRed"
                 android:text="Exit" />
+
+            <Button
+                android:id="@+id/btnNotif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@color/colorYellow"
+                android:text="Notif" />
         </LinearLayout>
 
         <include layout="@layout/progress_overlay" />
