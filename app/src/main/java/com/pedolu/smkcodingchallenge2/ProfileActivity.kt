@@ -3,11 +3,15 @@ package com.pedolu.smkcodingchallenge2
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.pedolu.smkcodingchallenge2.util.tampilToast
+import com.pedolu.smkcodingchallenge2.viewmodel.UserViewModel
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.progress_overlay.*
 
@@ -19,6 +23,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var address: String
     private lateinit var ref: DatabaseReference
     private lateinit var auth: FirebaseAuth
+    private val userViewModel by viewModels<UserViewModel>()
+    private lateinit var uid: String
+
 
     companion object {
         val REQUEST_CODE = 100
@@ -31,16 +38,34 @@ class ProfileActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
+        auth = FirebaseAuth.getInstance()
+        uid = auth.currentUser!!.uid
+        retriveRoomUserData()
         retrieveUserData()
         btnToEdit.setOnClickListener { goToEditProfileActivity() }
         btnExit.setOnClickListener { logoutUser() }
     }
 
+    private fun retriveRoomUserData() {
+        progressBarOverlay.visibility = View.VISIBLE
+        profileLinearLayout.visibility = View.GONE
+        userViewModel.init(this, uid)
+        userViewModel.user.observe(this, Observer { user ->
+            name = user.name
+            gender = user.gender
+            age = user.age
+            telp = user.telp
+            address = user.address
+            setViewText()
+            progressBarOverlay.visibility = View.GONE
+            profileLinearLayout.visibility = View.VISIBLE
+        })
+    }
+
+
     private fun retrieveUserData() {
         progressBarOverlay.visibility = View.VISIBLE
         profileLinearLayout.visibility = View.GONE
-        auth = FirebaseAuth.getInstance()
-        val uid: String = auth.currentUser!!.uid
         ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child(uid).child("Data").addValueEventListener(object :
             ValueEventListener {
@@ -54,16 +79,21 @@ class ProfileActivity : AppCompatActivity() {
                 age = dataSnapshot.child("age").value.toString()
                 telp = dataSnapshot.child("telp").value.toString()
                 address = dataSnapshot.child("address").value.toString()
-                txtName.text = name
-                txtGender.text = gender
-                txtAge.text = age
-                txtTelephone.text = telp
-                txtAddress.text = address
+                setViewText()
                 progressBarOverlay.visibility = View.GONE
                 profileLinearLayout.visibility = View.VISIBLE
             }
         })
     }
+
+    private fun setViewText() {
+        txtName.text = name
+        txtGender.text = gender
+        txtAge.text = age
+        txtTelephone.text = telp
+        txtAddress.text = address
+    }
+
 
     private fun goToEditProfileActivity() {
         val intent = Intent(this, EditProfileActivity::class.java)
@@ -92,4 +122,11 @@ class ProfileActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.clearFindViewByIdCache()
+    }
+
+
 }

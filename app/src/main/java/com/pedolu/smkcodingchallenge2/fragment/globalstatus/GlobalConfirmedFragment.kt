@@ -12,7 +12,7 @@ import com.pedolu.smkcodingchallenge2.R
 import com.pedolu.smkcodingchallenge2.adapter.GlobalStatusAdapter
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.mathdroidApiRequest
-import com.pedolu.smkcodingchallenge2.data.model.GlobalStatusSummaryItem
+import com.pedolu.smkcodingchallenge2.data.model.global.GlobalStatusSummaryItem
 import com.pedolu.smkcodingchallenge2.data.service.CovidMathdroidService
 import com.pedolu.smkcodingchallenge2.util.dismissLoading
 import com.pedolu.smkcodingchallenge2.util.showLoading
@@ -53,13 +53,13 @@ class GlobalConfirmedFragment : Fragment() {
 
     private fun callGlobalConfirmedSummary() {
         setInvisible()
-        showLoading(context!!, swipeRefreshLayout)
+        showLoading(requireContext(), swipeRefreshLayout)
         val httpClient = httpClient()
         val apiRequest = mathdroidApiRequest<CovidMathdroidService>(httpClient)
         val call = apiRequest.getGlobalConfirmed()
         call.enqueue(object : Callback<List<GlobalStatusSummaryItem>> {
             override fun onFailure(call: Call<List<GlobalStatusSummaryItem>>, t: Throwable) {
-                tampilToast(context!!, "Gagalds")
+                tampilToast(requireContext(), "Gagalds")
                 setVisible()
                 dismissLoading(swipeRefreshLayout)
             }
@@ -76,12 +76,12 @@ class GlobalConfirmedFragment : Fragment() {
                             response.body()?.size != 0 ->
                                 showGlobalConfirmedSummary(response.body()!!)
                             else -> {
-                                tampilToast(context!!, "Berhasil")
+                                tampilToast(requireContext(), "Berhasil")
                             }
                         }
                     }
                     else -> {
-                        tampilToast(context!!, "Coba Lagi")
+                        tampilToast(requireContext(), "Coba Lagi")
                     }
                 }
             }
@@ -92,12 +92,12 @@ class GlobalConfirmedFragment : Fragment() {
         listGlobalStatus.layoutManager = LinearLayoutManager(context)
         listGlobalStatus.adapter =
             GlobalStatusAdapter(
-                context!!,
+                requireContext(),
                 globalStatus,
                 "confirmed"
             ) {
                 val country = it
-                tampilToast(context!!, country.combinedKey)
+                tampilToast(requireContext(), country.combinedKey)
             }
     }
 

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pedolu.smkcodingchallenge2.R
-import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.data.model.indonesia.ProvinsiItem
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.provinsi_indonesia_item.view.*
 

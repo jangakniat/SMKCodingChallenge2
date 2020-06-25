@@ -12,7 +12,7 @@ import com.pedolu.smkcodingchallenge2.R
 import com.pedolu.smkcodingchallenge2.adapter.GlobalStatusAdapter
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.mathdroidApiRequest
-import com.pedolu.smkcodingchallenge2.data.model.GlobalStatusSummaryItem
+import com.pedolu.smkcodingchallenge2.data.model.global.GlobalStatusSummaryItem
 import com.pedolu.smkcodingchallenge2.data.service.CovidMathdroidService
 import com.pedolu.smkcodingchallenge2.util.dismissLoading
 import com.pedolu.smkcodingchallenge2.util.showLoading
@@ -53,13 +53,13 @@ class GlobalRecoveredFragment : Fragment() {
 
     private fun callGlobalRecoveredSummary() {
         setInvisible()
-        showLoading(context!!, swipeRefreshLayout)
+        showLoading(requireContext(), swipeRefreshLayout)
         val httpClient = httpClient()
         val apiRequest = mathdroidApiRequest<CovidMathdroidService>(httpClient)
         val call = apiRequest.getGlobalRecovered()
         call.enqueue(object : Callback<List<GlobalStatusSummaryItem>> {
             override fun onFailure(call: Call<List<GlobalStatusSummaryItem>>, t: Throwable) {
-                tampilToast(context!!, "Gagal")
+                tampilToast(requireContext(), "Gagal")
                 setVisible()
                 dismissLoading(swipeRefreshLayout)
             }
@@ -76,12 +76,12 @@ class GlobalRecoveredFragment : Fragment() {
                             response.body()?.size != 0 ->
                                 showGlobalRecoveredSummary(response.body()!!)
                             else -> {
-                                tampilToast(context!!, "Berhasil")
+                                tampilToast(requireContext(), "Berhasil")
                             }
                         }
                     }
                     else -> {
-                        tampilToast(context!!, "Coba Lagi")
+                        tampilToast(requireContext(), "Coba Lagi")
                     }
                 }
             }
@@ -92,12 +92,12 @@ class GlobalRecoveredFragment : Fragment() {
         listGlobalStatus.layoutManager = LinearLayoutManager(context)
         listGlobalStatus.adapter =
             GlobalStatusAdapter(
-                context!!,
+                requireContext(),
                 globalStatus,
                 "recovered"
             ) {
                 val country = it
-                tampilToast(context!!, country.combinedKey)
+                tampilToast(requireContext(), country.combinedKey)
             }
     }
 

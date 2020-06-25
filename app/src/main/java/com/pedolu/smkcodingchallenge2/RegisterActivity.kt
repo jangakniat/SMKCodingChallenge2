@@ -2,6 +2,7 @@ package com.pedolu.smkcodingchallenge2
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -10,7 +11,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.pedolu.smkcodingchallenge2.data.model.UserModel
+import com.pedolu.smkcodingchallenge2.data.model.room.UserModel
+import com.pedolu.smkcodingchallenge2.util.tampilToast
+import com.pedolu.smkcodingchallenge2.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_register.*
 
 
@@ -21,6 +24,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var session: UserSession
     private lateinit var auth: FirebaseAuth
     lateinit var ref: DatabaseReference
+    private val userViewModel by viewModels<UserViewModel>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -87,9 +93,24 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun storeUser() {
-        val User = UserModel(inputName, inputEmail, "", "", "", "")
         val uid = auth.currentUser!!.uid
+        val User = UserModel(
+            inputName,
+            inputEmail,
+            "",
+            "",
+            "",
+            uid
+        )
         ref.child("Users").child(uid).child("Data").setValue(User)
+            .addOnCompleteListener(this, OnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    userViewModel.init(this, uid)
+                    userViewModel.addData(User)
+                } else {
+                    tampilToast(this, "Gagal Membuat Akun, Coba Lagi")
+                }
+            })
     }
 
     private fun goToLoginActivity() {

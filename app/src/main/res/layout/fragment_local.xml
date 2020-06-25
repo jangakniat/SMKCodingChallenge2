@@ -4,26 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:foregroundGravity="center"
-            android:indeterminate="true"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/graphCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:foregroundGravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/graphCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
             android:layout_marginBottom="4dp"
             android:backgroundTint="@color/colorPrimary"
             android:elevation="16dp"
@@ -51,11 +56,21 @@
                     android:textSize="32sp"
                     android:visibility="visible" />
 
+                <TextView
+                    android:id="@+id/txtLastUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/countrySpinner"
+                    android:layout_centerHorizontal="true"
+                    android:text="0000-00-00 00:00:00"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/localSummaryChart"
                     android:layout_width="match_parent"
                     android:layout_height="260dp"
-                    android:layout_below="@id/countrySpinner"
+                    android:layout_below="@id/txtLastUpdate"
                     android:layout_margin="16dp" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
@@ -170,5 +185,6 @@
                     android:textSize="24sp" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
-    </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

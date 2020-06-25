@@ -1,6 +1,6 @@
 package com.pedolu.smkcodingchallenge2.data.service
 
-import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.data.model.indonesia.ProvinsiItem
 
 import retrofit2.Call
 import retrofit2.http.GET

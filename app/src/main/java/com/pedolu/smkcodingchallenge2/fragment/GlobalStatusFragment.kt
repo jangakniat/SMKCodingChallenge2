@@ -25,7 +25,7 @@ class GlobalStatusFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter =
-            GlobalViewPagerAdapter(this.activity!!)
+            GlobalViewPagerAdapter(this.requireActivity())
         viewPager.adapter = adapter
         TabLayoutMediator(tabsLayout, viewPager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->

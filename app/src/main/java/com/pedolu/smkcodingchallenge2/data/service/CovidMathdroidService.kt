@@ -1,9 +1,9 @@
 package com.pedolu.smkcodingchallenge2.data.service
 
-import com.pedolu.smkcodingchallenge2.data.model.Countries
-import com.pedolu.smkcodingchallenge2.data.model.CountrySummary
-import com.pedolu.smkcodingchallenge2.data.model.GlobalStatusSummaryItem
-import com.pedolu.smkcodingchallenge2.data.model.GlobalSummary
+import com.pedolu.smkcodingchallenge2.data.model.global.GlobalStatusSummaryItem
+import com.pedolu.smkcodingchallenge2.data.model.global.GlobalSummary
+import com.pedolu.smkcodingchallenge2.data.model.local.Countries
+import com.pedolu.smkcodingchallenge2.data.model.local.CountrySummary
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

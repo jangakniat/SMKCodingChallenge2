@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "291459673162-djc87un6hdm8l1dme6818o1iplgqu22c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pedolu.smkcodingchallenge2",
+            "certificate_hash": "fe1f17fbb09d286b284d4d32bce2644d422ed375"
+          }
+        },
+        {
+          "client_id": "291459673162-p19ijtqj3fgo7lq3p6b4fd8pe1v9oatj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pedolu.smkcodingchallenge2",
+            "certificate_hash": "e178dfadc863c188aa0c9bc770dc12b72500a010"
+          }
+        },
+        {
           "client_id": "291459673162-21suf6r2p1h2vfq0k1suvo34bi9d3hr8.apps.googleusercontent.com",
           "client_type": 3
         }

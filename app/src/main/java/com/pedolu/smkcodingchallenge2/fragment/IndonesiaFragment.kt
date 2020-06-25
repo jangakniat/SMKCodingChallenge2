@@ -12,7 +12,7 @@ import com.pedolu.smkcodingchallenge2.R
 import com.pedolu.smkcodingchallenge2.adapter.IndonesiaAdapter
 import com.pedolu.smkcodingchallenge2.data.httpClient
 import com.pedolu.smkcodingchallenge2.data.kawalCoronaApiRequest
-import com.pedolu.smkcodingchallenge2.data.model.ProvinsiItem
+import com.pedolu.smkcodingchallenge2.data.model.indonesia.ProvinsiItem
 import com.pedolu.smkcodingchallenge2.data.service.CovidKawalCoronaService
 import com.pedolu.smkcodingchallenge2.util.dismissLoading
 import com.pedolu.smkcodingchallenge2.util.showLoading
@@ -56,13 +56,13 @@ class IndonesiaFragment : Fragment() {
 
     private fun callIndonesiaProvinsi() {
         setInvisible()
-        showLoading(context!!, swipeRefreshLayout)
+        showLoading(requireContext(), swipeRefreshLayout)
         val httpClient = httpClient()
         val apiRequest = kawalCoronaApiRequest<CovidKawalCoronaService>(httpClient)
         val call = apiRequest.getProvinsi()
         call.enqueue(object : Callback<List<ProvinsiItem>> {
             override fun onFailure(call: Call<List<ProvinsiItem>>, t: Throwable) {
-                tampilToast(context!!, "Gagal")
+                tampilToast(requireContext(), "Gagal")
                 dismissLoading(swipeRefreshLayout)
                 setVisible()
             }
@@ -79,12 +79,12 @@ class IndonesiaFragment : Fragment() {
                             response.body()?.size != 0 ->
                                 showIndonesiaSummary(response.body()!!)
                             else -> {
-                                tampilToast(context!!, "Berhasil")
+                                tampilToast(requireContext(), "Berhasil")
                             }
                         }
                     }
                     else -> {
-                        tampilToast(context!!, "Gagal")
+                        tampilToast(requireContext(), "Gagal")
                     }
                 }
             }
@@ -95,11 +95,11 @@ class IndonesiaFragment : Fragment() {
         listProvinsiIndonesia.layoutManager = LinearLayoutManager(context)
         listProvinsiIndonesia.adapter =
             IndonesiaAdapter(
-                context!!,
+                requireContext(),
                 provinsi
             ) {
                 val provinsi = it
-                tampilToast(context!!, provinsi.attributes.provinsi)
+                tampilToast(requireContext(), provinsi.attributes.provinsi)
             }
     }
 

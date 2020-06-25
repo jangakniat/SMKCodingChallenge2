@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pedolu.smkcodingchallenge2.R
-import com.pedolu.smkcodingchallenge2.data.model.GlobalStatusSummaryItem
+import com.pedolu.smkcodingchallenge2.data.model.global.GlobalStatusSummaryItem
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.global_status_item.view.*
 

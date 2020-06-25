@@ -7,13 +7,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.pedolu.smkcodingchallenge2.data.model.UserModel
+import com.pedolu.smkcodingchallenge2.data.model.room.UserModel
 import com.pedolu.smkcodingchallenge2.util.tampilToast
+import com.pedolu.smkcodingchallenge2.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.progress_overlay.*
 
@@ -26,6 +28,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var ref: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var image: Uri
+    private val userViewModel by viewModels<UserViewModel>()
 
     companion object {
         private val IMAGE_PICK_CODE = 1000
@@ -86,17 +89,24 @@ class EditProfileActivity : AppCompatActivity() {
     private fun inputValidation() {
         when {
             name.isEmpty() -> txtName.error = "Nama tidak boleh kosong"
-            age.isEmpty() -> txtAge.error = "Umur tidak boleh kosong"
-            telp.isEmpty() -> txtTelephone.error = "Telp tidak boleh kosong"
-            address.isEmpty() -> txtAddress.error = "Alamat tidak boleh kosong"
             else -> {
-                val User = UserModel(name, gender, age, telp, address, "")
                 val uid: String = auth.currentUser!!.uid
+                val User =
+                    UserModel(
+                        name,
+                        gender,
+                        age,
+                        telp,
+                        address,
+                        uid
+                    )
                 ref = FirebaseDatabase.getInstance().getReference("Users")
                 ref.child(uid).child("Data").setValue(User)
                     .addOnCompleteListener(this, OnCompleteListener { task ->
                         if (task.isSuccessful) {
                             tampilToast(this, "Sukses Mengedit Profile")
+                            userViewModel.init(this, uid)
+                            userViewModel.updateData(User)
                             completeEditProfileActivity()
                         } else {
                             tampilToast(this, "Coba Lagi")

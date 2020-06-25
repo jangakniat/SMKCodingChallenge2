@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
@@ -16,8 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.pedolu.smkcodingchallenge2.data.model.UserModel
+import com.pedolu.smkcodingchallenge2.data.model.room.UserModel
 import com.pedolu.smkcodingchallenge2.util.tampilToast
+import com.pedolu.smkcodingchallenge2.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -32,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val RC_SIGN_IN = 1
     lateinit var ref: DatabaseReference
+    private val viewModel by viewModels<UserViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
         session = UserSession(this)
         checkLogin()
         sharedPreferences = getSharedPreferences(PREFER_NAME, Context.MODE_PRIVATE)
-        ref = FirebaseDatabase.getInstance().reference
+        ref = FirebaseDatabase.getInstance().getReference("Users")
         btnGoogleLogin.setOnClickListener { GoogleLogin() }
         btnRegister.setOnClickListener { goToRegisterActivity() }
         btnLogin.setOnClickListener { inputValidation() }
@@ -87,9 +90,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun storeUser() {
         val user = auth.currentUser
-        val User = UserModel(user!!.displayName.toString(), user.email.toString(), "", "", "", "")
         val uid = auth.currentUser!!.uid
-        ref.child("Users").child(uid).child("Data").setValue(User)
+        val User = UserModel(
+            user!!.displayName.toString(),
+            user.email.toString(),
+            "",
+            "",
+            "",
+            uid
+        )
+        ref.child(uid).child("Data").setValue(User).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                viewModel.init(this, uid)
+                viewModel.addData(User)
+            }
+        }
     }
 
     private fun inputValidation() {
